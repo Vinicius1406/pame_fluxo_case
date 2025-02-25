@@ -9,13 +9,14 @@ class Quartos{
 }
 
 
-class Reserva extends Quartos{
-    constructor(ID_unico,ID_do_cliente,status,data_de_entrada,data_de_saida){
+class Reserva{
+    constructor(ID_unico,ID_do_cliente,status,data_de_entrada,data_de_saida,quarto_reservado){
         this.ID_unico = ID_unico;
         this.ID_do_cliente = ID_do_cliente;
         this.status = status;
         this.data_de_entrada = data_de_entrada;
         this.data_de_saida = data_de_saida;
+        this.quarto_reservado = quarto_reservado;
     }
 }
 class Funcionario{
@@ -43,25 +44,109 @@ class Sistema{
         this.funcionarios_cadastrados = [];
         this.clientes_cadastrados = [];
         this.quartos_registrados = [];
+        this.id_de_reserva = 1;
         this.leitura = require('readline-sync')
 
     }
+    ver_minhas_reservas_cliente(){
+        if(this.reservas_cadastradas.length == 0){
+            console.log('\n');
+            console.log("O cliente nao possui nenhuma reserva\n");
+            return;
+        }
+        let id_do_cliente = this.leitura.question("Digite o seu ID do cliente:");
+        console.log('\n');
+        let cont = 0;
+        let achei = false;
+        while(cont != this.reservas_cadastradas.length){
+            if(this.reservas_cadastradas[cont].ID_do_cliente == id_do_cliente){
+                console.log("ID unico da reserva:",this.reservas_cadastradas[cont].ID_unico);
+                console.log("Status:",this.reservas_cadastradas[cont].status);
+                console.log("Data de entrada:",this.reservas_cadastradas[cont].data_de_entrada);
+                console.log("Data de saida:",this.reservas_cadastradas[cont].data_de_saida);
+                achei = true;
+            }
+            cont = cont + 1;
+        }
+        if(!achei){
+            console.log("Sua reserva nao foi encontrada");
+        }
+    }
+    cancelar_reserva_cliente(){
+        if(this.reservas_cadastradas.length == 0){
+            console.log("O cliente nao possui nenhuma reserva");
+            return;
+        }
+        let id_do_cliente = this.leitura.question("Digite o seu ID do cliente:");
+        console.log('\n');
+        let cont = 0;
+        let achei = 0;
+        let achei2 = false;
+        while(cont != this.reservas_cadastradas.length){
+            if(this.reservas_cadastradas[cont].ID_do_cliente == id_do_cliente){
+                this.reservas_cadastradas[cont].status == "Cancelada";
+                achei2 = true;
+            }
+            cont = cont + 1;
+        }
+        if(!achei2){
+            console.log("Sua reserva nao foi encontrada para ser cancelada");
+        }
+    }
+
     fazer_reserva_cliente(){
         let nome_do_quarto_de_interesse_do_cliente = this.leitura.question("Digite o nome do quarto:");
-        let data_de_entrada_do_cliente = this.leitura.question("Digite a data que deseja entrar:");
-        let data_de_saida_do_cliente = this.leitura.question("Digite a data que deseja sair:");
         let cont = 0;
+        let data_de_entrada_do_cliente = this.leitura.question("Digite a data que deseja entrar no formato dd/mm/aaaa:");
+        let data_de_saida_do_cliente = this.leitura.question("Digite a data que deseja sair no formato dd/mm/aaaa:");
+        let data_entrada_reserva = new Date(data_de_entrada_do_cliente).getTime();
+        let data_saida_reserva = new Date(data_de_saida_do_cliente).getTime();
+        let data_entrada_reserva_2;
+        let data_saida_reserva_2;
+        let id_do_cliente = this.leitura.question("Digite o seu ID de cliente:");
+        let achei = true;
+        let reserva;
         while(cont != this.reservas_cadastradas.length){
-            if(this.reservas_cadastradas[cont].nome == nome_do_quarto_de_interesse_do_cliente){
-                if(this.reservas_cadastradas[cont].data_de_entrada == data_de_entrada_do_cliente){
-                    if(this.reservas_cadastradas[cont].data_de_saida == data_de_saida_do_cliente){
-
+            if(this.reservas_cadastradas[cont].quarto_reservado.nome == nome_do_quarto_de_interesse_do_cliente){
+                if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
+                    data_entrada_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_entrada).getTime();
+                    data_saida_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_saida).getTime();
+                    if(data_entrada_reserva < data_entrada_reserva_2 && data_saida_reserva < data_entrada_reserva_2){
+                        achei = true;
+                    }
+                    else if(data_entrada_reserva > data_saida_reserva_2 && data_saida_reserva > data_saida_reserva_2){
+                        achei = true;
+                    }
+                    else{
+                        achei = false;
+                        break;
                     }
                 }
             }
+            cont = cont + 1;
         }
+        
+        if(achei == true){
+            cont = 0;
+            let achei_o_quarto = 0;
+            while(cont != this.quartos_registrados.length){
+                if(this.quartos_registrados[cont].nome == nome_do_quarto_de_interesse_do_cliente){
+                    achei_o_quarto = this.quartos_registrados[cont];
+                }
+                cont = cont + 1;
+            }
+            reserva = new Reserva(this.id_de_reserva,id_do_cliente,"realizada",data_de_entrada_do_cliente,data_de_saida_do_cliente,achei_o_quarto);
+            this.reservas_cadastradas.push(reserva);
+            this.id_de_reserva = this.id_de_reserva + 1;
+            console.log("Reserva agendada");
+        }
+        else{
+            console.log("Nao foi possivel agendar a sua reserva");
+        }
+        
     }
     ver_lista_de_quartos_cliente(){
+        
         
     }
     ver_meus_dados_cliente(cliente){
@@ -159,7 +244,7 @@ class Sistema{
                 contador = contador + 1;
             }
             if(usuario_encontrado != null){ //verifica se o usuario foi encontrado
-                let resp3;
+                let resp3 = 1;
                 do{
                     console.log("\nFuncionario logado!");
                     console.log("4.Ver meus dados");
@@ -171,7 +256,7 @@ class Sistema{
                     console.log("10.Sair da conta");
                     console.log('\n');
                     resp3 = this.leitura.question("Digite a sua opcao:");
-                    if(resp3 != 10)
+                    if(resp3 > 0 && resp3 < 10)
                     {
                         if(resp3 == 4){ // a ideia aqui ta certa
                             this.ver_meus_dados_funcionario(usuario_encontrado);
@@ -192,7 +277,7 @@ class Sistema{
                             this.adicionar_quarto_pelo_funcionario();
                         }
                     }
-                }while(resp3 != 10);
+                }while(resp3 > 0 && resp3 < 10);
                 
             }
             else{
@@ -205,28 +290,45 @@ class Sistema{
             let contador = 0;
             let cliente_encontrado = null;
             while(contador != this.clientes_cadastrados.length){
-                if(this.clientes_cadastrados.email[contador] == email && this.clientes_cadastrados.senha[contador] == senha){
+                if(this.clientes_cadastrados[contador].email == email && this.clientes_cadastrados[contador].senha == senha){
                     cliente_encontrado = this.clientes_cadastrados[contador];
                     break;
                 }
                 contador = contador + 1;
             }
             if(cliente_encontrado != null){
-                console.log("\nFuncionario logado!\n");
-                console.log("1.Ver meus dados");
-                console.log("2.Ver lista de quartos");
-                console.log("3.Fazer reserva");
-                console.log("4.Cancelar reserva");
-                console.log("5.Ver minhas reservas");
-                let resp3 = this.leitura.question("Digite a sua opcao:");
-                if(resp3 == 1){
-                    ver_meus_dados_cliente(cliente_encontrado);
-                }
-                else if(resp3 == 2){
+                let resp3 = 1;
+                do{
+                    console.log("\nFuncionario logado!\n");
+                    console.log("1.Ver meus dados");
+                    console.log("2.Ver lista de quartos");
+                    console.log("3.Fazer reserva");
+                    console.log("4.Cancelar reserva");
+                    console.log("5.Ver minhas reservas");
+                    console.log("6.Sair da conta");
+                    resp3 = this.leitura.question("Digite a sua opcao:");
+                    if(resp3 > 0 && resp3 < 6){
+                        if(resp3 == 1){
+                            ver_meus_dados_cliente(cliente_encontrado);
+                        }
+                        else if(resp3 == 2){
 
-                }
+                        }
+                        else if(resp3 == 3){
+                            this.fazer_reserva_cliente()
+                        }
+                        else if(resp3 == 4){
+                            this.cancelar_reserva_cliente();
+                        }
+                        else{
+                            this.ver_minhas_reservas_cliente();
+                        }
+                    }
+                }while(resp3 > 0 && resp3 < 6);
             }
-         
+            else{
+                console.log("\nUsuario nao encontrado\n");
+            }
         }
     }
     fazer_cadastro(opcao2){
@@ -267,7 +369,7 @@ class Sistema{
             console.log("3.Sair do Programa");
             resp = this.leitura.question()
             console.log('\n');
-            if(resp > 0 && resp <= 3)
+            if(resp > 0 && resp < 3)
             {
                 console.log("Digite o numero correspondente a funcionario ou a cliente: ");
                 console.log("1.Funcionario");
@@ -281,7 +383,7 @@ class Sistema{
                     this.fazer_cadastro(resp2);
                 } 
             }
-        }while(resp > 0 && resp <= 3);
+        }while(resp > 0 && resp < 3);
     }
 }
 
