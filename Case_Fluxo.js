@@ -45,16 +45,16 @@ class Sistema{
         this.clientes_cadastrados = [];
         this.quartos_registrados = [];
         this.id_de_reserva = 1;
+        this.id_de_cliente
         this.leitura = require('readline-sync')
 
     }
-    ver_minhas_reservas_cliente(){
+    ver_minhas_reservas_cliente(id_do_cliente){
         if(this.reservas_cadastradas.length == 0){
             console.log('\n');
             console.log("O cliente nao possui nenhuma reserva\n");
             return;
         }
-        let id_do_cliente = this.leitura.question("Digite o seu ID do cliente:");
         console.log('\n');
         let cont = 0;
         let achei = false;
@@ -72,12 +72,11 @@ class Sistema{
             console.log("Sua reserva nao foi encontrada");
         }
     }
-    cancelar_reserva_cliente(){
+    cancelar_reserva_cliente(id_do_cliente){
         if(this.reservas_cadastradas.length == 0){
             console.log("O cliente nao possui nenhuma reserva");
             return;
         }
-        let id_do_cliente = this.leitura.question("Digite o seu ID do cliente:");
         console.log('\n');
         let cont = 0;
         let achei = 0;
@@ -94,7 +93,7 @@ class Sistema{
         }
     }
 
-    fazer_reserva_cliente(){
+    fazer_reserva_cliente(id_do_cliente){
         let nome_do_quarto_de_interesse_do_cliente = this.leitura.question("Digite o nome do quarto:");
         let cont = 0;
         let data_de_entrada_do_cliente = this.leitura.question("Digite a data que deseja entrar no formato dd/mm/aaaa:");
@@ -103,7 +102,6 @@ class Sistema{
         let data_saida_reserva = new Date(data_de_saida_do_cliente).getTime();
         let data_entrada_reserva_2;
         let data_saida_reserva_2;
-        let id_do_cliente = this.leitura.question("Digite o seu ID de cliente:");
         let achei = true;
         let reserva;
         while(cont != this.reservas_cadastradas.length){
@@ -121,6 +119,10 @@ class Sistema{
                         achei = false;
                         break;
                     }
+                }
+                else{
+                    achei = false;
+                    break;
                 }
             }
             cont = cont + 1;
@@ -164,8 +166,7 @@ class Sistema{
         let quarto = new Quartos(quant_de_camas,preco_por_noite,nome_do_quarto,descricao);
         this.quartos_registrados.push(quarto);
     }
-    mudar_status_da_reserva_para_funcionario(){
-        let id_unico_da_reserva = this.leitura.question("Digite o ID_unico da reserva:");
+    mudar_status_da_reserva_para_funcionario(id_unico_da_reserva){
         let cont = 0;
         let achei = false;
         while(cont < this.reservas_cadastradas.length){
@@ -271,7 +272,7 @@ class Sistema{
                             this.ver_lista_de_clientes_para_funcionario();
                         }
                         else if(resp3 == 8){
-                            this.mudar_status_da_reserva_para_funcionario();
+                            this.mudar_status_da_reserva_para_funcionario(usuario_encontrado.ID_unico);
                         }       
                         else{
                             this.adicionar_quarto_pelo_funcionario();
@@ -315,13 +316,13 @@ class Sistema{
 
                         }
                         else if(resp3 == 3){
-                            this.fazer_reserva_cliente()
+                            this.fazer_reserva_cliente(cliente_encontrado.ID_unico)
                         }
                         else if(resp3 == 4){
-                            this.cancelar_reserva_cliente();
+                            this.cancelar_reserva_cliente(cliente_encontrado.ID_unico);
                         }
                         else{
-                            this.ver_minhas_reservas_cliente();
+                            this.ver_minhas_reservas_cliente(cliente_encontrado.ID_unico);
                         }
                     }
                 }while(resp3 > 0 && resp3 < 6);
