@@ -12,3 +12,4 @@ OBS: Como as funcionalidades do cliente ainda não foram implementadas, as opç�
 - Finalizar as funcionalidades do cliente.
 - Criar arquivo com todos os dados para que toda vez que o programa for executado, ele possa resgatar cadastros e dados registrados anteriormente.
 - Adaptar o código para que, ao programa ser iniciado, leia o arquivo citado acima.
+- Fazer apresentação
