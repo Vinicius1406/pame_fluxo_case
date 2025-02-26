@@ -81,7 +81,6 @@ class Sistema{
         }
         console.log('\n');
         let cont = 0;
-        let achei = 0;
         let achei2 = false;
         while(cont != this.reservas_cadastradas.length){
             if(this.reservas_cadastradas[cont].ID_do_cliente == id_do_cliente){
@@ -121,27 +120,30 @@ class Sistema{
         cont = 0;
         while(cont != this.reservas_cadastradas.length){
             if(this.reservas_cadastradas[cont].quarto_reservado.nome == nome_do_quarto_de_interesse_do_cliente){
-                if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
-                    console.log("Oi");
-                    data_entrada_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_entrada).getTime();
-                    data_saida_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_saida).getTime();
-                    if(data_entrada_reserva < data_entrada_reserva_2 && data_saida_reserva < data_entrada_reserva_2){
+                data_entrada_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_entrada).getTime();
+                data_saida_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_saida).getTime();
+                if(data_entrada_reserva < data_entrada_reserva_2 && data_saida_reserva < data_entrada_reserva_2){
+                    quarto_disponivel = true;
+                    if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
                         quarto_disponivel = true;
-                        console.log("Oi2");
-                    }
-                    else if(data_entrada_reserva > data_saida_reserva_2 && data_saida_reserva > data_saida_reserva_2){
-                        quarto_disponivel = true;
-                        console.log("Oi3");
                     }
                     else{
                         quarto_disponivel = false;
-                        console.log("Oi4");
+                        break;
+                    }
+                }
+                else if(data_entrada_reserva > data_saida_reserva_2 && data_saida_reserva > data_saida_reserva_2){
+                    quarto_disponivel = true;
+                    if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
+                        quarto_disponivel = true;
+                    }
+                    else{
+                        quarto_disponivel = false;
                         break;
                     }
                 }
                 else{
                     quarto_disponivel = false;
-                    console.log("Oi5");
                     break;
                 }
             }
