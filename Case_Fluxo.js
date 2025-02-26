@@ -97,15 +97,48 @@ class Sistema{
     fazer_reserva_cliente(id_do_cliente){
         let nome_do_quarto_de_interesse_do_cliente = this.leitura.question("Digite o nome do quarto:");
         let cont = 0;
-        let data_de_entrada_do_cliente = this.leitura.question("Digite a data que deseja entrar no formato dd/mm/aaaa:");
-        let data_de_saida_do_cliente = this.leitura.question("Digite a data que deseja sair no formato dd/mm/aaaa:");
-        let data_entrada_reserva = new Date(data_de_entrada_do_cliente).getTime();
-        let data_saida_reserva = new Date(data_de_saida_do_cliente).getTime();
+        let entrada_valida = true;
+        let data_atual = new Date();
+        let data_separada;
+        let data_entrada_reserva
+        let data_saida_reserva
+        data_atual = data_atual.getTime();
+        
+        while(entrada_valida)
+        {
+            let data_de_entrada_do_cliente = this.leitura.question("Digite a data que deseja entrar no formato dd/mm/aaaa:");
+            data_separada = data_de_entrada_do_cliente.split("/");
+            data_entrada_reserva = new Date(data_separada[1]+ "/"+ data_separada[0] + "/" + data_separada[2]).getTime();
+            if(data_entrada_reserva < data_atual){
+                console.log("Data de entrada invalida. Eh necessario que a data digitada seja maior que a data atual. Digite a data de entrada novamente!\n");
+            }
+            else
+            {
+                entrada_valida = false;
+            }
+        }
+        
+        entrada_valida = true;
+        while(entrada_valida)
+        {
+            let data_de_saida_do_cliente = this.leitura.question("Digite a data que deseja sair no formato dd/mm/aaaa:");
+            data_separada = data_de_saida_do_cliente.split("/");
+            data_saida_reserva = new Date(data_separada[1]+ "/"+ data_separada[0] + "/" + data_separada[2]).getTime();
+            if(data_saida_reserva < data_atual){
+                console.log("Data de saida invalida. Eh necessario que a data digitada seja maior que a data atual");
+            }
+            else
+            {
+                entrada_valida = false;
+            }
+        }
+        
         let data_entrada_reserva_2;
         let data_saida_reserva_2;
         let achei_o_quarto = null
         let quarto_disponivel = true;
         let reserva;
+        
         while(cont != this.quartos_registrados.length){
             if(this.quartos_registrados[cont].nome == nome_do_quarto_de_interesse_do_cliente){
                 achei_o_quarto = this.quartos_registrados[cont];
@@ -118,40 +151,42 @@ class Sistema{
             return;
         }
         cont = 0;
+        /*console.log("data entrada cliente: ", //data_entrada_reserva);
+        console.log("data saida cliente: ", data_saida_reserva);*/
         while(cont != this.reservas_cadastradas.length){
+            //console.log("Teste: Percorrendo o array");
             if(this.reservas_cadastradas[cont].quarto_reservado.nome == nome_do_quarto_de_interesse_do_cliente){
-                data_entrada_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_entrada).getTime();
-                data_saida_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_saida).getTime();
+                //console.log("Teste: Quarto encontrado");
+                data_entrada_reserva_2 = this.reservas_cadastradas[cont].data_de_entrada;
+                data_saida_reserva_2 = this.reservas_cadastradas[cont].data_de_saida;
+                //console.log("data entrada reserva: ", data_entrada_reserva_2);
+                //console.log("data saida reserva: ", data_saida_reserva_2);
                 if(data_entrada_reserva < data_entrada_reserva_2 && data_saida_reserva < data_entrada_reserva_2){
+                    //console.log("Teste: Quarto disponível 1");
                     quarto_disponivel = true;
-                    if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
-                        quarto_disponivel = true;
-                    }
-                    else{
-                        quarto_disponivel = false;
-                        break;
-                    }
                 }
                 else if(data_entrada_reserva > data_saida_reserva_2 && data_saida_reserva > data_saida_reserva_2){
+                    //console.log("Teste: Quarto disponível 2");
                     quarto_disponivel = true;
+                }
+                else{
                     if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
+                        //console.log("Teste: Quarto disponível 3");
                         quarto_disponivel = true;
                     }
                     else{
                         quarto_disponivel = false;
+                        //console.log("Teste: Quarto indisponível");
                         break;
                     }
-                }
-                else{
-                    quarto_disponivel = false;
-                    break;
                 }
             }
             cont = cont + 1;
         }
         
         if(quarto_disponivel == true){
-            reserva = new Reserva(this.id_de_reserva,id_do_cliente,"realizada",data_de_entrada_do_cliente,data_de_saida_do_cliente,achei_o_quarto);
+            console.log("Teste: Quarto disponível final");
+            reserva = new Reserva(this.id_de_reserva,id_do_cliente,"Realizada",data_entrada_reserva,data_saida_reserva,achei_o_quarto);
             this.reservas_cadastradas.push(reserva);
             this.id_de_reserva = this.id_de_reserva + 1;
             console.log("Reserva agendada");
