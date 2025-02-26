@@ -17,6 +17,7 @@ class Reserva{
         this.data_de_entrada = data_de_entrada;
         this.data_de_saida = data_de_saida;
         this.quarto_reservado = quarto_reservado;
+        
     }
 }
 class Funcionario{
@@ -45,7 +46,7 @@ class Sistema{
         this.clientes_cadastrados = [];
         this.quartos_registrados = [];
         this.id_de_reserva = 1;
-        this.id_de_cliente
+        this.atributo_id_unico = 1;
         this.leitura = require('readline-sync')
 
     }
@@ -61,6 +62,7 @@ class Sistema{
         while(cont != this.reservas_cadastradas.length){
             if(this.reservas_cadastradas[cont].ID_do_cliente == id_do_cliente){
                 console.log("ID unico da reserva:",this.reservas_cadastradas[cont].ID_unico);
+                this.reservas_cadastradas[cont].ID_unico = this.reservas_cadastradas[cont].ID_unico + 1;
                 console.log("Status:",this.reservas_cadastradas[cont].status);
                 console.log("Data de entrada:",this.reservas_cadastradas[cont].data_de_entrada);
                 console.log("Data de saida:",this.reservas_cadastradas[cont].data_de_saida);
@@ -102,41 +104,51 @@ class Sistema{
         let data_saida_reserva = new Date(data_de_saida_do_cliente).getTime();
         let data_entrada_reserva_2;
         let data_saida_reserva_2;
-        let achei = true;
+        let achei_o_quarto = null
+        let quarto_disponivel = true;
         let reserva;
+        while(cont != this.quartos_registrados.length){
+            if(this.quartos_registrados[cont].nome == nome_do_quarto_de_interesse_do_cliente){
+                achei_o_quarto = this.quartos_registrados[cont];
+                break;
+            }
+            cont = cont + 1;
+        }
+        if(achei_o_quarto == null){
+            console.log("O quarto escolhido nao esta cadastrado");
+            return;
+        }
+        cont = 0;
         while(cont != this.reservas_cadastradas.length){
             if(this.reservas_cadastradas[cont].quarto_reservado.nome == nome_do_quarto_de_interesse_do_cliente){
                 if(this.reservas_cadastradas[cont].status == "Adiada" || this.reservas_cadastradas[cont].status == "Cancelada"){
+                    console.log("Oi");
                     data_entrada_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_entrada).getTime();
                     data_saida_reserva_2 = new Date(this.reservas_cadastradas[cont].data_de_saida).getTime();
                     if(data_entrada_reserva < data_entrada_reserva_2 && data_saida_reserva < data_entrada_reserva_2){
-                        achei = true;
+                        quarto_disponivel = true;
+                        console.log("Oi2");
                     }
                     else if(data_entrada_reserva > data_saida_reserva_2 && data_saida_reserva > data_saida_reserva_2){
-                        achei = true;
+                        quarto_disponivel = true;
+                        console.log("Oi3");
                     }
                     else{
-                        achei = false;
+                        quarto_disponivel = false;
+                        console.log("Oi4");
                         break;
                     }
                 }
                 else{
-                    achei = false;
+                    quarto_disponivel = false;
+                    console.log("Oi5");
                     break;
                 }
             }
             cont = cont + 1;
         }
         
-        if(achei == true){
-            cont = 0;
-            let achei_o_quarto = 0;
-            while(cont != this.quartos_registrados.length){
-                if(this.quartos_registrados[cont].nome == nome_do_quarto_de_interesse_do_cliente){
-                    achei_o_quarto = this.quartos_registrados[cont];
-                }
-                cont = cont + 1;
-            }
+        if(quarto_disponivel == true){
             reserva = new Reserva(this.id_de_reserva,id_do_cliente,"realizada",data_de_entrada_do_cliente,data_de_saida_do_cliente,achei_o_quarto);
             this.reservas_cadastradas.push(reserva);
             this.id_de_reserva = this.id_de_reserva + 1;
@@ -145,7 +157,6 @@ class Sistema{
         else{
             console.log("Nao foi possivel agendar a sua reserva");
         }
-        
     }
     ver_lista_de_quartos_cliente(){
         
@@ -153,6 +164,7 @@ class Sistema{
     }
     ver_meus_dados_cliente(cliente){
         console.log("ID_unico:",cliente.ID_unico);
+        cliente.ID_unico = cliente.ID_unico + 1;
         console.log("Nome:",cliente.nome);
         console.log("Data de nascimento:",cliente.data_de_nascimento);
         console.log("Email:",cliente.email);
@@ -188,6 +200,7 @@ class Sistema{
         let cont = 0;
         while(cont != this.clientes_cadastrados.length){
             console.log("ID unico:",this.clientes_cadastrados[cont].ID_unico);
+            this.clientes_cadastrados[cont].ID_unico = this.clientes_cadastrados[cont].ID_unico + 1;
             console.log("Nome:",this.clientes_cadastrados[cont].nome);
             console.log("Data de nascimento",this.clientes_cadastrados[cont].data_de_nascimento);
             console.log("CPF:",this.clientes_cadastrados[cont].CPF);
@@ -216,6 +229,7 @@ class Sistema{
         let cont = 0;
         while(cont != this.reservas_cadastradas.length){
             console.log("ID unico:",this.reservas_cadastradas[cont].ID_unico);
+            this.reservas_cadastradas[cont].ID_unico = this.reservas_cadastradas[cont].ID_unico + 1;
             console.log("ID do cliente:",this.reservas_cadastradas[cont].ID_do_cliente);
             console.log("status:",this.reservas_cadastradas[cont].status);
             console.log("data de entrada:",this.reservas_cadastradas[cont].data_de_entrada);
@@ -224,7 +238,8 @@ class Sistema{
         }
     }
     ver_meus_dados_funcionario(funcionario){
-        console.log("ID unico",funcionario.ID_unico);
+        console.log("ID unico:",funcionario.ID_unico);
+        funcionario.ID_unico = funcionario.ID_unico + 1;
         console.log("Nome de usuario:",funcionario.nome_de_usuario);
         console.log("CPF:",funcionario.CPF);
         console.log("email:",funcionario.email);
@@ -257,7 +272,7 @@ class Sistema{
                     console.log("10.Sair da conta");
                     console.log('\n');
                     resp3 = this.leitura.question("Digite a sua opcao:");
-                    if(resp3 > 0 && resp3 < 10)
+                    if(resp3 > 3 && resp3 < 10)
                     {
                         if(resp3 == 4){ // a ideia aqui ta certa
                             this.ver_meus_dados_funcionario(usuario_encontrado);
@@ -278,7 +293,10 @@ class Sistema{
                             this.adicionar_quarto_pelo_funcionario();
                         }
                     }
-                }while(resp3 > 0 && resp3 < 10);
+                    else{
+                        console.log("Digite novamente!");
+                    }
+                }while(resp3 != 10);
                 
             }
             else{
@@ -310,7 +328,7 @@ class Sistema{
                     resp3 = this.leitura.question("Digite a sua opcao:");
                     if(resp3 > 0 && resp3 < 6){
                         if(resp3 == 1){
-                            ver_meus_dados_cliente(cliente_encontrado);
+                            this.ver_meus_dados_cliente(cliente_encontrado);
                         }
                         else if(resp3 == 2){
 
@@ -325,7 +343,7 @@ class Sistema{
                             this.ver_minhas_reservas_cliente(cliente_encontrado.ID_unico);
                         }
                     }
-                }while(resp3 > 0 && resp3 < 6);
+                }while(resp3 != 6);
             }
             else{
                 console.log("\nUsuario nao encontrado\n");
@@ -335,28 +353,26 @@ class Sistema{
     fazer_cadastro(opcao2){
         if(opcao2 == 1){
             console.log("Formulario para cadastrar funcionario:\n")
-            let id_unico = this.leitura.question("Digite o seu ID_unico:");
             let nome = this.leitura.question("Digite o seu nome de usuario:");
             let cpf = this.leitura.question("Digite o seu CPF:");
             let email = this.leitura.question("Digite o seu email:");
             let senha = this.leitura.question("Digite a sua senha:");
             console.log('\n');
-            const pessoa = new Funcionario(id_unico,nome,cpf,email,senha);
-            //let funcionarios = this.funcionarios_cadastrados;
-            //console.log(this.funcionarios_cadastrados);
+            const pessoa = new Funcionario(this.atributo_id_unico,nome,cpf,email,senha);
             this.funcionarios_cadastrados.push(pessoa);
+            this.atributo_id_unico = this.atributo_id_unico + 1;
         }
         else{
             console.log("Formulario para cadastrar cliente:\n")
-            let id_unico = this.leitura.question("Digite o seu ID_unico:");
             let nome = this.leitura.question("Digite o seu nome de usuario:");
             let data_de_nascimento = this.leitura.question("Digite a sua data de nascimento:");
             let cpf = this.leitura.question("Digite o seu CPF:");
             let email = this.leitura.question("Digite o seu email:");
             let senha = this.leitura.question("Digite o seu senha:");
             console.log('\n');
-            let pessoa = new Cliente(id_unico,nome,data_de_nascimento,cpf,email,senha);
+            let pessoa = new Cliente(this.atributo_id_unico,nome,data_de_nascimento,cpf,email,senha);
             this.clientes_cadastrados.push(pessoa);
+            this.atributo_id_unico = this.atributo_id_unico + 1;
         }
     }
     iniciar_sistema(){
@@ -390,4 +406,3 @@ class Sistema{
 
 let sistema = new Sistema(1);
 sistema.iniciar_sistema();
-
