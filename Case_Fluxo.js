@@ -274,6 +274,9 @@ class Sistema{
                     console.log("10.Sair da conta");
                     console.log('\n');
                     resp3 = this.leitura.question("Digite a sua opcao:");
+                    if(resp3 == 10){
+                        return;
+                    }
                     if(resp3 > 3 && resp3 < 10)
                     {
                         if(resp3 == 4){ // a ideia aqui ta certa
@@ -328,6 +331,9 @@ class Sistema{
                     console.log("5.Ver minhas reservas");
                     console.log("6.Sair da conta");
                     resp3 = this.leitura.question("Digite a sua opcao:");
+                    if(resp3 == 6){
+                        return;
+                    }
                     if(resp3 > 0 && resp3 < 6){
                         if(resp3 == 1){
                             this.ver_meus_dados_cliente(cliente_encontrado);
@@ -361,6 +367,21 @@ class Sistema{
             let senha = this.leitura.question("Digite a sua senha:");
             console.log('\n');
             const pessoa = new Funcionario(this.atributo_id_unico,nome,cpf,email,senha);
+            let cont = 0;
+            while(cont != this.funcionarios_cadastrados.length){
+                if(pessoa.nome_de_usuario == this.funcionarios_cadastrados[cont].nome){
+                    if(pessoa.CPF == this.funcionarios_cadastrados[cont].cpf){
+                        if(pessoa.email == this.funcionarios_cadastrados[cont].email){
+                            if(pessoa.senha == this.funcionarios_cadastrados[cont].senha){
+                                console.log("Esse funcionario ja existe\n");
+                                //console.log(this.funcionarios_cadastrados[cont])
+                                return;
+                            }
+                        }
+                    }
+                }
+                cont = cont + 1;
+            }
             this.funcionarios_cadastrados.push(pessoa);
             this.atributo_id_unico = this.atributo_id_unico + 1;
         }
@@ -372,6 +393,22 @@ class Sistema{
             let email = this.leitura.question("Digite o seu email:");
             let senha = this.leitura.question("Digite o seu senha:");
             console.log('\n');
+            let cont = 0;
+            while(cont != this.clientes_cadastrados.length){
+                if(this.clientes_cadastrados[cont].nome == nome){
+                    if(this.clientes_cadastrados[cont].data_de_nascimento == data_de_nascimento){
+                        if(this.clientes_cadastrados[cont].cpf == cpf){
+                            if(this.clientes_cadastrados[cont].email == email){
+                                if(this.clientes_cadastrados[cont].senha == senha){
+                                    console.log("Esse cliente ja existe\n");
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                cont = cont + 1;
+            }
             let pessoa = new Cliente(this.atributo_id_unico,nome,data_de_nascimento,cpf,email,senha);
             this.clientes_cadastrados.push(pessoa);
             this.atributo_id_unico = this.atributo_id_unico + 1;
