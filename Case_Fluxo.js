@@ -223,9 +223,10 @@ class Sistema{
         else{
             while(cont < this.quartos_registrados.length){
                 console.log("cont:",cont);
-                //console.log(this.quartos_registrados[cont]);
+                quarto_disponivel == true;
                 while(cont2 < this.reservas_cadastradas.length){
                     console.log("cont2:",cont2);
+                    quarto_disponivel == true;
                     //console.log(this.reservas_cadastradas[cont2]);
                     if(this.quartos_registrados[cont].nome == this.reservas_cadastradas[cont2].quarto_reservado.nome){
                         //console.log(this.reservas_cadastradas[cont2].quarto_reservado);
@@ -251,17 +252,16 @@ class Sistema{
                                 quarto_disponivel = false;
                                 //cont2 = cont2 + 1;
                             }
-
                         }
                     }
+                    if(quarto_disponivel == true){
+                        console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                        console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                        console.log("Nome:",this.quartos_registrados[cont].nome);
+                        console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                        break;
+                    }
                     cont2 = cont2 + 1;
-                }
-                if(quarto_disponivel == true){
-                    console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
-                    console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
-                    console.log("Nome:",this.quartos_registrados[cont].nome);
-                    console.log("Descricao:",this.quartos_registrados[cont].descricao);
-                    break;
                 }
                 cont = cont + 1;
             }
