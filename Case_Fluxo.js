@@ -202,6 +202,7 @@ class Sistema{
     ver_lista_de_quartos_cliente(){
         let cont = 0;
         let cont2 = 0;
+        let quarto_disponivel = true;
         let data_de_entrada = this.leitura.question("Digite a data de inicio no formato dd/mm/aaaa:");
         let data_de_saida = this.leitura.question("Digite a data de saida no formato dd/mm/aaaa:");
         let data_separada1 = data_de_entrada.split("/");
@@ -231,42 +232,34 @@ class Sistema{
                         //console.log("Oi3");
                         if(data_de_inicio_desejada < this.reservas_cadastradas[cont2].data_de_entrada && data_de_saida_desejada < this.reservas_cadastradas[cont2].data_de_saida){
                             //console.log("Oi4");
-                            console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
-                            console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
-                            console.log("Nome:",this.quartos_registrados[cont].nome);
-                            console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                            quarto_disponivel = true;
                             //cont2 = cont2 + 1;
                         }
                         else if(data_de_inicio_desejada > this.reservas_cadastradas[cont2].data_de_entrada && data_de_saida_desejada > this.reservas_cadastradas[cont2].data_de_saida){
                             //console.log("Oi4");
-                            console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
-                            console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
-                            console.log("Nome:",this.quartos_registrados[cont].nome);
-                            console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                            quarto_disponivel = true;
                             //cont2 = cont2 + 1;
                         }
                         else{
                             if(this.reservas_cadastradas[cont2].status != "Realizada"){
                                 console.log("Oi5");
-                                console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
-                                console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
-                                console.log("Nome:",this.quartos_registrados[cont].nome);
-                                console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                                quarto_disponivel = true;
                                 //cont2 = cont2 + 1;
                             }
                             else{
                                 //console.log("Oi6");
-                                console.log("Esse quarto nao esta disponivel nesse periodo:",this.quartos_registrados[cont].nome);
+                                quarto_disponivel = false;
                                 //cont2 = cont2 + 1;
                             }
+
                         }
                     }
-                    else{
-                        console.log("Oi7");
+                    if(quarto_disponivel == true){
                         console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
                         console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
                         console.log("Nome:",this.quartos_registrados[cont].nome);
                         console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                        break;
                     }
                     cont2 = cont2 + 1;
                 }
