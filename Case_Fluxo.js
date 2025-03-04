@@ -100,8 +100,8 @@ class Sistema{
         let entrada_valida = true;
         let data_atual = new Date();
         let data_separada;
-        let data_entrada_reserva
-        let data_saida_reserva
+        let data_entrada_reserva;
+        let data_saida_reserva;
         data_atual = data_atual.getTime();
         
         while(entrada_valida)
@@ -190,13 +190,87 @@ class Sistema{
             this.reservas_cadastradas.push(reserva);
             this.id_de_reserva = this.id_de_reserva + 1;
             console.log("Reserva agendada");
+            //console.log("Quantidade de camas:",reserva.quarto_reservado.quant_de_camas);
+            //console.log("Preco por noite:",reserva.quarto_reservado.preco_por_noite);
+            //console.log("Nome:",reserva.quarto_reservado.nome);
+            //console.log("Descricao:",reserva.quarto_reservado.descricao);
         }
         else{
             console.log("Nao foi possivel agendar a sua reserva");
         }
     }
     ver_lista_de_quartos_cliente(){
+        let cont = 0;
+        let cont2 = 0;
+        let data_de_entrada = this.leitura.question("Digite a data de inicio no formato dd/mm/aaaa:");
+        let data_de_saida = this.leitura.question("Digite a data de saida no formato dd/mm/aaaa:");
+        let data_separada1 = data_de_entrada.split("/");
+        let data_de_inicio_desejada = new Date(data_separada1[1] + "/" + data_separada1[0] + "/" + data_separada1[2]).getTime();
+        let data_separada2 = data_de_saida.split("/");
+        let data_de_saida_desejada = new Date(data_separada2[1] + "/" + data_separada2[0] + "/" + data_separada2[2]).getTime();
+
         
+        if(this.reservas_cadastradas.length == 0){
+            while(cont != this.quartos_registrados.length){
+                console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                console.log("Nome:",this.quartos_registrados[cont].nome);
+                console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                cont = cont + 1;
+            }
+        }
+        else{
+            while(cont2 != this.reservas_cadastradas.length){
+                //console.log("Oi");
+                while(cont != this.quartos_registrados.length){
+                    //console.log("Oi2");
+                    if(this.quartos_registrados[cont] == this.reservas_cadastradas[cont2].quarto_reservado){
+                        console.log(this.reservas_cadastradas[cont2].quarto_reservado);
+                        //console.log("Oi3");
+                        if(data_de_inicio_desejada < this.reservas_cadastradas[cont2].data_de_entrada && data_de_saida_desejada < this.reservas_cadastradas[cont2].data_de_saida){
+                            //console.log("Oi4");
+                            console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                            console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                            console.log("Nome:",this.quartos_registrados[cont].nome);
+                            console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                            cont2 = cont2 + 1;
+                        }
+                        else if(data_de_inicio_desejada > this.reservas_cadastradas[cont2].data_de_entrada && data_de_saida_desejada > this.reservas_cadastradas[cont2].data_de_saida){
+                            //console.log("Oi4");
+                            console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                            console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                            console.log("Nome:",this.quartos_registrados[cont].nome);
+                            console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                            cont2 = cont2 + 1;
+                        }
+                        else{
+                            if(this.reservas_cadastradas[cont2].status != "Realizada"){
+                                console.log("Oi5");
+                                console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                                console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                                console.log("Nome:",this.quartos_registrados[cont].nome);
+                                console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                                cont2 = cont2 + 1;
+                            }
+                            else{
+                                //console.log("Oi6");
+                                console.log("Esse quarto nao esta disponivel nesse periodo:",this.quartos_registrados[cont].nome);
+                                cont2 = cont2 + 1;
+                            }
+                        }
+                    }
+                    else{
+                        console.log("Oi7");
+                        console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                        console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                        console.log("Nome:",this.quartos_registrados[cont].nome);
+                        console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                    }
+                    cont = cont + 1;
+                }
+                cont2 = cont2 + 1;
+            }
+        }
         
     }
     ver_meus_dados_cliente(cliente){
@@ -284,7 +358,7 @@ class Sistema{
     }
     fazer_login(opcao1){
         console.log("Página de Login\n");
-        if(opcao1 == 1){ //opcao selecionada foi do funcionario
+        if(opcao1 == 1){ //login foi feito por funcionario
             let email = this.leitura.question("Digite o seu email:");
             let senha = this.leitura.question("Digite o seu senha:");
             let usuario_encontrado = null;
@@ -296,7 +370,7 @@ class Sistema{
                 }
                 contador = contador + 1;
             }
-            if(usuario_encontrado != null){ //verifica se o usuario foi encontrado
+            if(usuario_encontrado != null){ 
                 let resp3 = 1;
                 do{
                     console.log("\nFuncionario logado!");
@@ -343,7 +417,7 @@ class Sistema{
                 console.log("Usuario nao encontrado");
             }  
         }
-        else{
+        else{//login foi feito por cliente
             let email = this.leitura.question("Digite o seu email:");
             let senha = this.leitura.question("Digite o seu senha:");
             let contador = 0;
@@ -358,7 +432,7 @@ class Sistema{
             if(cliente_encontrado != null){
                 let resp3 = 1;
                 do{
-                    console.log("\nFuncionario logado!\n");
+                    console.log("\nCliente logado!\n");
                     console.log("1.Ver meus dados");
                     console.log("2.Ver lista de quartos");
                     console.log("3.Fazer reserva");
@@ -374,7 +448,7 @@ class Sistema{
                             this.ver_meus_dados_cliente(cliente_encontrado);
                         }
                         else if(resp3 == 2){
-
+                            this.ver_lista_de_quartos_cliente();
                         }
                         else if(resp3 == 3){
                             this.fazer_reserva_cliente(cliente_encontrado.ID_unico)
@@ -401,13 +475,12 @@ class Sistema{
             let email = this.leitura.question("Digite o seu email:");
             let senha = this.leitura.question("Digite a sua senha:");
             console.log('\n');
-            const pessoa = new Funcionario(this.atributo_id_unico,nome,cpf,email,senha);
             let cont = 0;
             while(cont != this.funcionarios_cadastrados.length){
-                if(pessoa.nome_de_usuario == this.funcionarios_cadastrados[cont].nome){
-                    if(pessoa.CPF == this.funcionarios_cadastrados[cont].cpf){
-                        if(pessoa.email == this.funcionarios_cadastrados[cont].email){
-                            if(pessoa.senha == this.funcionarios_cadastrados[cont].senha){
+                if(nome == this.funcionarios_cadastrados[cont].nome_de_usuario){
+                    if(cpf == this.funcionarios_cadastrados[cont].CPF){
+                        if(email == this.funcionarios_cadastrados[cont].email){
+                            if(senha == this.funcionarios_cadastrados[cont].senha){
                                 console.log("Esse funcionario ja existe\n");
                                 //console.log(this.funcionarios_cadastrados[cont])
                                 return;
@@ -417,6 +490,7 @@ class Sistema{
                 }
                 cont = cont + 1;
             }
+            const pessoa = new Funcionario(this.atributo_id_unico,nome,cpf,email,senha);
             this.funcionarios_cadastrados.push(pessoa);
             this.atributo_id_unico = this.atributo_id_unico + 1;
         }
@@ -432,7 +506,7 @@ class Sistema{
             while(cont != this.clientes_cadastrados.length){
                 if(this.clientes_cadastrados[cont].nome == nome){
                     if(this.clientes_cadastrados[cont].data_de_nascimento == data_de_nascimento){
-                        if(this.clientes_cadastrados[cont].cpf == cpf){
+                        if(this.clientes_cadastrados[cont].CPF == cpf){
                             if(this.clientes_cadastrados[cont].email == email){
                                 if(this.clientes_cadastrados[cont].senha == senha){
                                     console.log("Esse cliente ja existe\n");
@@ -450,7 +524,7 @@ class Sistema{
         }
     }
     iniciar_sistema(){
-        let resp = 1;
+        let resp;
         let resp2;
         do{
             console.log("Página Inicial")
