@@ -231,25 +231,25 @@ class Sistema{
                     //console.log(this.reservas_cadastradas[cont2]);
                     if(this.quartos_registrados[cont].nome == this.reservas_cadastradas[cont2].quarto_reservado.nome){
                         //console.log(this.reservas_cadastradas[cont2].quarto_reservado);
-                        //console.log("Oi3");
+                        console.log("Oi3");
                         if(data_de_inicio_desejada < this.reservas_cadastradas[cont2].data_de_entrada && data_de_saida_desejada < this.reservas_cadastradas[cont2].data_de_saida){
-                            //console.log("Oi4");
+                            console.log("Oi4");
                             quarto_disponivel = true;
                             //cont2 = cont2 + 1;
                         }
                         else if(data_de_inicio_desejada > this.reservas_cadastradas[cont2].data_de_entrada && data_de_saida_desejada > this.reservas_cadastradas[cont2].data_de_saida){
-                            //console.log("Oi4");
+                            console.log("Oi5");
                             quarto_disponivel = true;
                             //cont2 = cont2 + 1;
                         }
                         else{
                             if(this.reservas_cadastradas[cont2].status != "Realizada"){
-                                console.log("Oi5");
+                                console.log("Oi6");
                                 quarto_disponivel = true;
                                 //cont2 = cont2 + 1;
                             }
                             else{
-                                //console.log("Oi6");
+                                console.log("Oi7");
                                 quarto_disponivel = false;
                                 break;
                                 //cont2 = cont2 + 1;
