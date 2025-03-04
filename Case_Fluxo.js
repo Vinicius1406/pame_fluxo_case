@@ -254,14 +254,14 @@ class Sistema{
 
                         }
                     }
-                    if(quarto_disponivel == true){
-                        console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
-                        console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
-                        console.log("Nome:",this.quartos_registrados[cont].nome);
-                        console.log("Descricao:",this.quartos_registrados[cont].descricao);
-                        break;
-                    }
                     cont2 = cont2 + 1;
+                }
+                if(quarto_disponivel == true){
+                    console.log("Quantidade de camas:",this.quartos_registrados[cont].quant_de_camas);
+                    console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
+                    console.log("Nome:",this.quartos_registrados[cont].nome);
+                    console.log("Descricao:",this.quartos_registrados[cont].descricao);
+                    break;
                 }
                 cont = cont + 1;
             }
