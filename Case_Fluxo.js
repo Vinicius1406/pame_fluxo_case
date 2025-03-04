@@ -224,6 +224,7 @@ class Sistema{
             while(cont < this.quartos_registrados.length){
                 console.log("cont:",cont);
                 quarto_disponivel == true;
+                cont2 = 0;
                 while(cont2 < this.reservas_cadastradas.length){
                     console.log("cont2:",cont2);
                     quarto_disponivel == true;
@@ -250,6 +251,7 @@ class Sistema{
                             else{
                                 //console.log("Oi6");
                                 quarto_disponivel = false;
+                                break;
                                 //cont2 = cont2 + 1;
                             }
                         }
@@ -261,9 +263,6 @@ class Sistema{
                     console.log("Preco por noite:",this.quartos_registrados[cont].preco_por_noite);
                     console.log("Nome:",this.quartos_registrados[cont].nome);
                     console.log("Descricao:",this.quartos_registrados[cont].descricao);
-                }
-                else{
-                    break;
                 }
                 cont = cont + 1;
             }
